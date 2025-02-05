@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #f0f0f0, #ffffff);
+    }
+    .container {
+      width: 90%;
+      max-width: 400px;
+      padding: 25px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+    h2 {
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #333;
+    }
+    p {
+      margin: 10px 0;
+      font-size: 14px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      font-size: 14px;
+      margin: 5px 0;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #78b6e9;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 15px;
+    }
+    button:hover {
+      background: #35638D;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="student-container">
+    <!-- Student info and grading history will be injected here -->
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const currentStudent = localStorage.getItem("currentStudent");
+      if (!currentStudent) {
+        window.location.href = "index.html";
+        return;
+      }
+
+      const students = JSON.parse(localStorage.getItem("students")) || [];
+      const student = students.find(s => s.username === currentStudent);
+      const container = document.getElementById("student-container");
+
+      let content = `<h2>Student Dashboard</h2>
+                     <p>Welcome, <strong>${student.username}</strong>!</p>`;
+
+      if (student.grades && student.grades.length > 0) {
+        content += "<h3>Grading History:</h3><ul>";
+        student.grades.forEach(record => {
+          content += `<li>Grade: <strong>${record.grade}</strong> at <em>${record.time || 'Unknown time'}</em></li>`;
+        });
+        content += "</ul>";
+      } else {
+        content += `<p>You have not been graded yet.</p>`;
+      }
+
+      content += `<button onclick="logout()">Logout</button>`;
+      container.innerHTML = content;
+    });
+
+    function logout() {
+      localStorage.removeItem("currentStudent");
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>
